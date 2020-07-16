@@ -13,6 +13,8 @@ jobs:
 
     steps:
       - name: Checkout code
+        with:
+          fetch-depth: 0
         uses: actions/checkout@v2
 
       - name: Run multiline script to increment tag
