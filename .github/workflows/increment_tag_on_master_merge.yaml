@@ -18,6 +18,7 @@ jobs:
       - name: Run multiline script to increment tag
         run: |
           echo "hello world"
+          git fetch --tags
           VERSION=`git describe --abbrev=0 --tags`
           VERSION=${VERSION:-'0.0.0'}
           echo $VERSION
