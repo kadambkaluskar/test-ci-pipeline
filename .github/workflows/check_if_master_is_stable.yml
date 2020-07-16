@@ -1,0 +1,18 @@
+name: check_master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  check_master:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        name: checkout code
+
+      - name: run test cases
+        run: |
+          echo "Hello World"
+          test -f test_file.txt
