@@ -3,6 +3,8 @@ name: test_on_pr
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs: 
   increment_tag:
@@ -18,7 +20,7 @@ jobs:
         run: |
           echo "hello world"
           git fetch --tags
-          VERSION=`git describe --abbrev=0 --tags`
+          VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
           VERSION=${VERSION:-'0.0.0'}
           echo $VERSION
           VERSION_BITS=(${VERSION//./ })
