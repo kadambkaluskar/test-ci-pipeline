@@ -1,48 +1,65 @@
-name: test_on_pr
-
+name: Bump version
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-jobs: 
-  increment_tag:
+    branches:
+      - master
+jobs:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - uses: actions/checkout@master
         with:
+          # Fetches entire history, so we can analyze commits since last tag
           fetch-depth: 0
-        uses: actions/checkout@v2
+      - name: Bump version and push tag
+        uses: mathieudutour/github-tag-action@v4.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+# name: test_on_pr
 
-      - name: Run multiline script to increment tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "hello world"
-          git fetch --tags
-          VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
-          VERSION=${VERSION:-'0.0.0'}
-          echo $VERSION
-          VERSION_BITS=(${VERSION//./ })
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
 
-          VNUM1=${VERSION_BITS[0]}
-          VNUM2=${VERSION_BITS[1]}
-          VNUM3=${VERSION_BITS[2]}
-          VNUM3=$((VNUM3+1))
+# jobs: 
+#   increment_tag:
+#     runs-on: ubuntu-latest
 
-          NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
+#     steps:
+#       - name: Checkout code
+#         with:
+#           fetch-depth: 0
+#         uses: actions/checkout@v2
 
-          GIT_COMMIT=`git rev-parse HEAD`
+#       - name: Run multiline script to increment tag
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           echo "hello world"
+#           git fetch --tags
+#           VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
+#           VERSION=${VERSION:-'0.0.0'}
+#           echo $VERSION
+#           VERSION_BITS=(${VERSION//./ })
 
-          NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
+#           VNUM1=${VERSION_BITS[0]}
+#           VNUM2=${VERSION_BITS[1]}
+#           VNUM3=${VERSION_BITS[2]}
+#           VNUM3=$((VNUM3+1))
 
-          if [ -z "$NEEDS_TAG" ]; then
-            echo "git tag $NEW_TAG"
+#           NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
+
+#           GIT_COMMIT=`git rev-parse HEAD`
+
+#           NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
+
+#           if [ -z "$NEEDS_TAG" ]; then
+#             echo "git tag $NEW_TAG"
             
-            echo "Tagged with $NEW_TAG"
-            echo "git push --tags"
-          else
-            echo "Already a tag on this commit"
-          fi
+#             echo "Tagged with $NEW_TAG"
+#             echo "git push --tags"
+#           else
+#             echo "Already a tag on this commit"
+#           fi
