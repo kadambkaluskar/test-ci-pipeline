@@ -1,0 +1,44 @@
+name: test_on_pr
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+
+ jobs: 
+  increment_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run multiline script to increment tag
+        run: |
+          echo "hello world"
+          VERSION=`git describe --abbrev=0 --tags`
+          VERSION=${VERSION:-'0.0.0'}
+          echo $VERSION
+          VERSION_BITS=(${VERSION//./ })
+
+          VNUM1=${VERSION_BITS[0]}
+          VNUM2=${VERSION_BITS[1]}
+          VNUM3=${VERSION_BITS[2]}
+          VNUM3=$((VNUM3+1))
+
+          NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
+
+          GIT_COMMIT=`git rev-parse HEAD`
+
+          NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
+
+          if [ -z "$NEEDS_TAG" ]; then
+            echo "git tag $NEW_TAG"
+            
+            echo "Tagged with $NEW_TAG"
+            echo "git push --tags"
+          else
+            echo "Already a tag on this commit"
+          fi
