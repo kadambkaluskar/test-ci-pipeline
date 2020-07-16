@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run multiline script to increment tag
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "hello world"
           git fetch --tags
