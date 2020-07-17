@@ -19,3 +19,13 @@ jobs:
         uses: mathieudutour/github-tag-action@v4.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: vfmNSHwSqp45FwYlr0SdRSRG
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: zurg-influxdb-staging
+          status: FAILED
+          color: danger
