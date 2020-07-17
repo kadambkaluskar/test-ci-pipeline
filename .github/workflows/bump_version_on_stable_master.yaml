@@ -20,6 +20,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Changing latest tag
+        run:  |
+          git tag -d latest
+          git push origin --delete latest
+          git tag latest
+          git push origin latest
+
       - name: Notify slack fail
         if: failure()
         env:
