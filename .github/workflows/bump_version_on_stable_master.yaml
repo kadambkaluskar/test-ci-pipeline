@@ -15,6 +15,10 @@ jobs:
         run: |
           echo "Hello World"
           test -f test_file.txt
+      - name: deleting latest tag
+        run: |
+          git tag -d latest
+          git push origin --delete latest
       - name: Bump version and push tag
         uses: mathieudutour/github-tag-action@v4.5
         with:
@@ -22,8 +26,6 @@ jobs:
 
       - name: Changing latest tag
         run:  |
-          git tag -d latest
-          git push origin --delete latest
           git tag latest
           git push origin latest
 
