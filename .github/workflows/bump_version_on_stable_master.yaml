@@ -27,7 +27,7 @@ jobs:
 
       - name: Printing output from previous step
         env:
-          NEW_TAG: ${{ steps.build_package.outputs.version }}
+          NEW_TAG: ${{ steps.bump_version.outputs.new_version }}
         run: |
           echo "$NEW_TAG"
 
