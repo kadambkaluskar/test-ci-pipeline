@@ -23,6 +23,13 @@ jobs:
         uses: mathieudutour/github-tag-action@v4.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+        id: bump_version
+
+      - name: Printing output from previous step
+        env:
+          NEW_TAG: ${{ steps.build_package.outputs.version }}
+        run: |
+          echo "$NEW_TAG"
 
       - name: Changing latest tag
         run:  |
